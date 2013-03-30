@@ -26,6 +26,6 @@ handlers:
   upload: static/favicon.ico
   
 - url: /.*
-  script: main.py
+  script: main.SECRETS
   secure: always
 

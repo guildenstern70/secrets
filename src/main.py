@@ -5,11 +5,8 @@
  main.py
  
 """
-import logging
 
-# Google Imports
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp.util import run_wsgi_app
+import webapp2
 
 # Select Django v.0.96
 from google.appengine.dist import use_library
@@ -31,7 +28,7 @@ from littlelite.secrets.pages import Profile
 from littlelite.secrets.pages import AccountDeleted
 from littlelite.secrets.pages import Admin
 
-SECRETS = webapp.WSGIApplication(
+SECRETS = webapp2.WSGIApplication(
                                      [('/', Index),
                                       ('/register', Register),
                                       ('/menu', Menu),
@@ -47,12 +44,6 @@ SECRETS = webapp.WSGIApplication(
                                       ('/accountdeleted', AccountDeleted),
                                       ('/admin', Admin)
                                      ],
-                                    debug=False)
+                                    debug=True)
 
-def main():
-    """ Secret's entry point """
-    logging.getLogger().setLevel(logging.DEBUG)
-    run_wsgi_app(SECRETS)
 
-if __name__ == "__main__":
-    main()

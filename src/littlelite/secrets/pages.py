@@ -5,6 +5,7 @@
  pages.py
 
 """
+import webapp2
 
 import logging
 import base64
@@ -12,7 +13,6 @@ import sys
 import urllib
 
 # Google Imports
-from google.appengine.ext import webapp
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from google.appengine.ext import db
@@ -52,10 +52,10 @@ def login_required(func):
             func(self, *args, **kw)
     return wrapper
     
-class Profile(webapp.RequestHandler):
+class Profile(webapp2.RequestHandler):
     """ /profile page """
-    def __init__(self):
-        super(Profile, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
     
     @login_required
@@ -90,10 +90,10 @@ class Profile(webapp.RequestHandler):
             secret_user.put()    
             self.redirect('/profile')
             
-class AccountDeleted(webapp.RequestHandler): 
+class AccountDeleted(webapp2.RequestHandler): 
     """ /accountdeleted page """
-    def __init__(self):
-        super(AccountDeleted, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
         
     def get(self): #IGNORE:C0111  
@@ -104,7 +104,7 @@ class AccountDeleted(webapp.RequestHandler):
         self.response.out.write(template.render('templates/message.html', template_values)) 
            
 
-class Admin(webapp.RequestHandler): 
+class Admin(webapp2.RequestHandler): 
     """ /menu page """
     
     class UserMail(object):
@@ -147,10 +147,10 @@ class Admin(webapp.RequestHandler):
           }
         self.response.out.write(template.render('templates/admin.html', template_values))
 
-class Menu(webapp.RequestHandler): 
+class Menu(webapp2.RequestHandler): 
     """ /menu page """
-    def __init__(self):
-        super(Menu, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
         
     def __move_messages(self, target_folder):
@@ -254,10 +254,10 @@ class Menu(webapp.RequestHandler):
             else:
                 logging.debug('Unknown command: '+command)
 
-class How(webapp.RequestHandler):
+class How(webapp2.RequestHandler):
     """ /how page """
-    def __init__(self):
-        super(How, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
         
     def get(self):
@@ -267,10 +267,10 @@ class How(webapp.RequestHandler):
           }
         self.response.out.write(template.render('templates/howdoesitwork.html', template_values))
         
-class Plugins(webapp.RequestHandler):
+class Plugins(webapp2.RequestHandler):
     """ /plugins page """
-    def __init__(self):
-        super(Plugins, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
         
     def get(self):
@@ -280,10 +280,10 @@ class Plugins(webapp.RequestHandler):
           }
         self.response.out.write(template.render('templates/plugins.html', template_values))
                 
-class Contact(webapp.RequestHandler):
+class Contact(webapp2.RequestHandler):
     """ /contact page """
-    def __init__(self):
-        super(Contact, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
         
     def __send_contact_mail(self):
@@ -353,7 +353,7 @@ class Contact(webapp.RequestHandler):
         else:
             self.redirect('/contact?mailsent=0')
             
-class Logout(webapp.RequestHandler):
+class Logout(webapp2.RequestHandler):
     """ /logout page handles logouts """
     def post(self):
         command = self.request.get('command')
@@ -368,10 +368,10 @@ class Logout(webapp.RequestHandler):
             logging.debug('Unknown login-logout command: '+command)
             self.redirect(users.create_login_url("/"))
                    
-class View(webapp.RequestHandler):
+class View(webapp2.RequestHandler):
     """ /view page """
-    def __init__(self):
-        super(View, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
         
     # Weird chrome fix
@@ -493,11 +493,11 @@ class View(webapp.RequestHandler):
             finally:
                 self.response.out.write(out_message)
   
-class Compose(webapp.RequestHandler):
+class Compose(webapp2.RequestHandler):
     """ /compose page """
 
-    def __init__(self):
-        super(Compose, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
     
     @login_required    
@@ -588,11 +588,11 @@ class Compose(webapp.RequestHandler):
             msg = urllib.quote_plus("Message saved as draft")
         self.redirect('/menu?folder='+target+'&msg='+msg)
         
-class Register(webapp.RequestHandler):
+class Register(webapp2.RequestHandler):
     """ /register page """
     
-    def __init__(self):
-        super(Register, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
                  
     def get(self):
@@ -622,14 +622,15 @@ class Register(webapp.RequestHandler):
             registration_data.receivenews = False
         registration_data.put()
         # Move existing messages in user's inbox
-        UserQueries.initialize_user(self.login.user)
+        if (self.login.user != None):
+            UserQueries.initialize_user(self.login.user)
         msg = urllib.quote_plus("HINT:   Click 'Compose' to send an encrypted message.")
-        self.redirect("/menu?msg="+msg)
+        self.redirect("/menu?folder=inbox&msg="+msg)
                 
-class AddressEdit(webapp.RequestHandler):
+class AddressEdit(webapp2.RequestHandler):
     """ /ajax helper class for address editing """
-    def __init__(self):
-        super(AddressEdit, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
     
     def post(self):
@@ -646,11 +647,11 @@ class AddressEdit(webapp.RequestHandler):
             UserQueries.update_address(idaddress, value, None)
         self.response.out.write(value);   
              
-class Addresses(webapp.RequestHandler):
+class Addresses(webapp2.RequestHandler):
     """ /addressbook page """
     
-    def __init__(self):
-        super(Addresses, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
         
     def __build_json_answer(self, query, results):
@@ -698,7 +699,7 @@ class Addresses(webapp.RequestHandler):
                 UserQueries.delete_address(item)
         self.redirect("/addressbook")
     
-class Index(webapp.RequestHandler):
+class Index(webapp2.RequestHandler):
     """ /index page """
     
     def get(self):
@@ -711,7 +712,7 @@ class Index(webapp.RequestHandler):
             'login': login,
             'version': version()
         }
-        
+                
         if (not login.is_logged):
             self.response.out.write(template.render('templates/index.html', template_values))
         else:
