@@ -1,0 +1,27 @@
+  <div id="header">
+    <h1>&nbsp;</h1>
+    <h1>&nbsp;</h1>
+    <h1>&nbsp;</h1>
+    <h2>&nbsp;&nbsp;send encrypted messages safely</h2>
+    <div id="navtabs">
+      <ul>
+        <li><a href="/?action=home" title="Home"><span>Home</span></a></li>
+        <li><a href="/" title="Secrets Box"><span>Secrets</span></a></li>
+    {% if login.is_logged %}
+        <li><a href="/addressbook" title="My Address Book"><span>Address Book</span></a></li>
+        <li><a href="/profile" title="My Profile Options"><span>Settings</span></a></li>
+    {% endif %}
+        <li><a href="/howdoesitwork" title="How does Secrets work"><span>How does it work</span></a></li>
+        <li><a href="/plugins" title="Plugins"><span>Plug-ins</span></a></li>
+        <li><a href="/contact" title="Contact Secrets"><span>Contact</span></a></li>
+    {% if login.is_admin %}
+        <li><a href="/admin" title="Administration"><span>ADMIN</span></a></li>
+    {% endif %}
+<!--  FUTURE 
+<li><a href="#" title="Link 7"><span>Link 7</span></a></li>
+        -->
+      </ul>
+    </div>
+    <!--//end #navtabs//-->
+  </div>
+  <!--//end #header//-->

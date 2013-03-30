@@ -1,0 +1,92 @@
+{% extends "base.html" %} 
+
+{% block extra_header %}
+<script language="JavaScript" type="text/javascript"> 
+<!-- 
+
+function confirmDelete() { 
+    if (confirm("Do you really want to delete your account? You will lose any stored message.")) {
+    return true; 
+    } else {
+    return false;
+    }
+}
+
+function confirmMexDelete() { 
+    if (confirm("You are about to delete all messages you stored in Secret. Proceed?")) {
+    return true; 
+    } else {
+    return false;
+    }
+} 
+
+
+//--> 
+</script>
+{% endblock %}
+
+{% block title %}Secrets - User Profile{% endblock %}
+
+{% block rightcolumn %}
+{% include "right_login.html" %}
+{% endblock %}
+
+{% block maincontent %}
+<p>&nbsp;</p>
+<div id="mainContent" align="left">
+<p>&nbsp;</p>
+<h2>User profile: {{user.username}}</h2>
+<p>&nbsp;</p>
+  <form id="form2" method="post" action="" tmt:validate="true">
+      <div>
+        <table border='0'>
+        <tr>
+            <td><label for="name">Your Name: </label></td>
+            <td><input type="text" name="firstname" id="firstname" value="{{user.firstname}}" readonly/>
+                &nbsp;
+                <input type="text" name="lastname" id="lastname" value="{{user.lastname}}" readonly/>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="name">Account created: </label></td>
+            <td><input type="text" name="created" id="created" value="{{user.added|date:"d-m-y"}}" readonly/></td>
+        </tr>
+        <tr>
+            <td><label for="name">Receive News: </label></td>
+            <td><input type="checkbox" name="agree" id="agree" {% if user.receivenews %} checked {% endif %} /></td>
+        </tr>
+        <tr>
+            <td><label for="name">e-Mail: </label></td>
+            <td><input type="text" name="email" id="email" value="{{user.user.email}}" readonly /> </td>
+        </tr>
+        <tr>
+            <td><label for="encryption">Default encryption Level: </label></td>
+            <td>
+                <select name="encryption" id="encryption" disabled>
+                <option>DES (64 bit)</option>
+                <option>3DES (128 bit)</option>
+                <option>AES (256 bit)</option>
+                <option>Blowfish (448 bit)</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="encryption">User quota (# of messages): </label></td>
+            <td><input type="text" name="newquota" id="newquota" value="{{user.quota}}" readonly/></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: right"><input type="submit" name="command" id="submitChange" value="Submit" /></td>
+        </tr>
+        </table>
+      </div>     
+      <p>&nbsp;</p>
+      <p>&nbsp;<input type="submit" name="command" id="submitRemoveAllMex" value="Remove all messages" onClick="return confirmMexDelete()" />
+      &nbsp;<input type="submit" name="command" id="submitCancelID" value="Delete my account" onClick="return confirmDelete()" />
+      </p>
+  </form>
+
+</div>
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+{% endblock %}

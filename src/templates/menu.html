@@ -1,0 +1,116 @@
+{% extends "base-advanced.html" %}      
+
+{% block title %}Secrets - Your secrets{% endblock %}
+
+{% block extra_header %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="css/pro_dropdown_2.css" />
+<script src="script/stuHover.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block bodyonload %}onload="menuload()"{% endblock %}
+
+{% block rightcolumn %}
+{% include "right_login.html" %}
+{% endblock %}
+
+{% block maincontent %}
+<span class="preload1"></span>
+<span class="preload2"></span>
+
+{% include "navfolders.html" %}
+
+<form name="messageList" id="messageList" method="post" action="">
+<input type="hidden" name="mode" id="mode" value="" />
+<!-- What folder is  -->
+<input type="hidden" name="whatFolder" id="whatFolder" value="{{folder}}" />
+
+<div id="divList">
+    <ul id="nav">
+        <li class="top"><a href="#" class="top_link" onclick="menucommander('compose')"><span>Compose</span></a></li>
+        {% if messages %}
+        <li class="top"><a href="#" class="top_link" onclick="menucommander('archive')"><span>Archive</span></a>
+        <li class="top"><a href="#" class="top_link" onclick="menucommander('delete')"><span>Delete</span></a>
+        {% endif %}
+        {% ifequal folder 'trash' %}
+        <li class="top"><a href="#" class="top_link" onclick="menucommander('emptytrash')"><span>Empty trash</span></a>
+        {% else %}
+        {% if messages %}
+        <li class="top"><a href="#" class="top_link" onclick="menucommander('shred')"><span>Shred</span></a>
+        {% endif %}
+        {% endifequal %}
+        {% if messages %}
+        <li class="top"><a href="#" class="top_link"><span class="down">Move To</span></a>
+            <ul class="sub">
+                <li><a href="#" onclick="menucommander('mt_inbox')">Incoming</a></li>
+                <li><a href="#" onclick="menucommander('mt_archive')">Archive</a></li>
+                <li><a href="#" onclick="menucommander('mt_trash')">Recycle Bin</a></li>
+            </ul>
+        </li>
+        {% endif %}
+    </ul>
+  <table width="100%" border="1" cellspacing="2" cellpadding="2">
+    <thead>
+    <tr>
+      <th width="5%" scope="col">
+      	<input type="checkbox" id="selectAll" name="selectAll" onClick="checkAll()" /></th>
+      {% ifequal folder 'sent' %}
+      <th align="center" width="26%" scope="col">To</th>
+      {% else %}
+      {% ifequal folder 'draft'%}
+      <th align="center" width="26%" scope="col">To</th>
+      {% else %}
+      <th align="center" width="26%" scope="col">From</th>
+      {% endifequal %}{% endifequal %}
+      <th width="48%" scope="col">Subject</th>
+      <th width="19%" scope="col">Date</th>
+    </tr>
+    </thead>
+    <tbody class="hvr">
+    {% if messages %}
+    	{% for box_message in messages %}
+        {% if box_message.received %}
+    	<tr>
+        {% else %}
+        <tr style="font-weight: bold">
+        {% endif %}
+    		  <td><input type="checkbox" name="xssl" id="xssl" value="{{box_message.key}}" /></td>
+    		  {% ifequal folder 'sent'%}
+    		  <td><a href="/view?mk={{box_message.key}}&folder={{folder}}">{{box_message.receiver}}</a></td>
+    		  {% else %}
+              {% ifequal folder 'draft'%}
+              <td><a href="/view?mk={{box_message.key}}&folder={{folder}}">{{box_message.receiver}}</a></td>
+              {% else %}
+              <td><a href="/view?mk={{box_message.key}}&folder={{folder}}">{{box_message.sender}}</a></td>
+              {% endifequal %}{% endifequal %}
+		      <td><a href="/view?mk={{box_message.key}}&folder={{folder}}">
+		      			<span class="msgTitle">{{box_message.title}}</span>
+		      </a></td>
+		      <td>{{box_message.datetime|date:"D d/m/Y H:i:s"}}</td>
+    	</tr>
+    	{% endfor %}        
+    {% else %}
+    <tr>
+      <td colspan="4">You have no secrets in your {{folder}} folder.</td>
+    </tr>
+    {% endif %}
+    </tbody>
+  </table>
+  {% if has_pages %}
+  <div id="tblstyle" width="" align="center">
+    {% if has_previous %}
+    <a href="/menu?folder={{folder}}&page={{previous}}"> &lt;&lt; </a> &nbsp;
+    {% endif %}
+    
+    Page: {{next}} / {{total_pages}}
+    
+    {% if has_next %}
+    &nbsp;<a href="/menu?folder={{folder}}&page={{next}}"> &gt;&gt; </a>
+    {% endif %}
+  </div>
+  {% endif %}
+  </div>
+  </form>
+{% endblock %}
+
+

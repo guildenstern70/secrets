@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Secrets{% endblock %}
+
+{% block rightcolumn %}
+{% include "right_login.html" %}
+{% endblock %}
+
+{% block maincontent %}
+<p>&nbsp;</p>
+<div id="mainContent">
+  <p>&nbsp;</p>
+  <h2>Keep your secrets!</h2>
+  <p>Secrets is easy and secure. Here is <a href="/howdoesitwork">how it works</a>:</p>
+  <ol>
+    <li>You compose a secret message</li>
+    <li>You set a password</li>
+    <li>You send the message indicating the e-mail address of the receiver</li>
+  </ol>
+  <p>The receiver will get an e-mail with a notice. He follows the link,<br />
+  enters the correct password, and will be able to read / store / forward / print the message.</p>
+  <h2>Secrets adopts state-of-the-art encryption algorithms</h2>
+  <p>
+  By default, Secrets uses DES encryption algorithm with keys at 64 bits, but you can increase security by adopting stronger algorithms, such as:</p>
+  <ul>
+    <li><em>Triple DES</em> (128-bit)</li>
+    <li><em>AES-Rijndael</em> (up to 256-bit) </li>
+    <li><em>Blowfish</em> (up to 448-bit)</li>
+    </ul>
+  <p>&nbsp;</p>
+  <blockquote class="warning">
+    <p><strong>SECRETS IS FREE FOR CASUAL USE - but with <i>plug-ins</i> you can get even more security and options</strong><br />
+      Click <a href="/plugins">here</a> to see Secrets plug-ins page.</p>
+    <p>&nbsp;</p>
+  </blockquote>
+  <blockquote class="question">
+    <p><strong>HOW CAN I USE SECRETS?</strong></p>
+    <p><strong>Very simple: just<a href="http://www.littlelite.net/public/secrets/Secrets_Wink.htm" target="_blank"> look at this video</a>.</strong></p>
+  </blockquote>
+ </div><br />
+ {% endblock %}
+
+ {% block before_end %}
+ <script type="text/javascript">
+ var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+ </script>
+ <script type="text/javascript">
+ try {
+ var pageTracker = _gat._getTracker("UA-1884593-3");
+ pageTracker._trackPageview();
+ } catch(err) {}</script>
+ {% endblock %}
+
+

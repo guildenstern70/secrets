@@ -1,0 +1,6 @@
+{% extends "base.html" %}  
+
+{% block extra_header %}
+<script type="text/javascript" src="script/prototype-1.6.0.3.js"></script>
+<script type="text/javascript" src="script/littlelite.js"></script>
+{% endblock %}  

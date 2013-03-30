@@ -1,0 +1,46 @@
+{% extends "base.html" %} 
+
+{% block title %}Secrets - Administration page{% endblock %}
+
+{% block rightcolumn %}
+{% include "right_login.html" %}
+{% endblock %}
+
+{% block maincontent %}
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div id="mainContent" align="left">
+<p>&nbsp;</p>
+<p>Registered users: {{ registered }}</p>
+<table width="90%">
+<thead>
+<tr>
+<th>Username</th><th>Name</th><th>Email</th><th>Birth</th><th>Added</th><th>News?</th><th># Messages</th>
+</tr>
+</thead>
+<tbody>
+{% for scrt_user in scrt_users %}
+<tr>
+<td>{{ scrt_user.user.username }}</td>
+<td>{{ scrt_user.user.firstname }} {{ scrt_user.user.lastname }}</td>
+<td>{{ scrt_user.user.user.email }}</td>
+<td>{{ scrt_user.user.yearbirth }}</td>
+<td>{{ scrt_user.user.added|date:"d-m-y" }}</td>
+<td>{{ scrt_user.user.receivenews }}</td>
+<td>{{ scrt_user.summary.status }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<div align="center">
+<a href="{{prev_link}}">[PREV]</a>&nbsp;&nbsp;<a href="{{next_link}}">[NEXT]</a>
+</div>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+<p>&nbsp;</p>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+<div id="divFolders">
+
+  <table width="100%" border="1" cellpadding="2" cellspacing="2">
+  <tbody class="hvr">
+    <tr>
+     {% ifequal folder 'inbox' %}
+     <td width="75%"><a href="/menu?folder=inbox"><b>&gt; Incoming Secrets</b></a></td>
+     {% else %}
+     <td width="75%"><a href="/menu?folder=inbox">Incoming Secrets</a></td>
+     {% endifequal %} 
+      <td width="25%">{{summary.inbox_count}}</td>
+    </tr>
+    <tr>
+    {% ifequal folder 'sent' %}
+      <td><a href="/menu?folder=sent"><b>&gt; Secrets Sent</b></a></td>
+    {% else %}
+      <td><a href="/menu?folder=sent">Secrets Sent</a></td>
+    {% endifequal %}
+      <td>{{summary.sent_count}}</td>
+    </tr>
+    <tr>
+     {% ifequal folder 'archive' %}
+     <td width="75%"><a href="/menu?folder=archive"><b>&gt; Archive</b></a></td>
+     {% else %}
+     <td width="75%"><a href="/menu?folder=archive">Archive</a></td>
+     {% endifequal %} 
+      <td width="25%">{{summary.archive_count}}</td>
+    </tr>
+    <tr>
+    {% ifequal folder 'draft' %}
+      <td><a href="/menu?folder=draft"><b>&gt; Draft Secrets</b></a></td>
+    {% else %}
+      <td><a href="/menu?folder=draft">Draft Secrets</a></td>
+    {% endifequal %}
+      <td>{{summary.draft_count}}</td>
+    </tr>
+    <tr>
+    {% ifequal folder 'trash' %}
+      <td><a href="/menu?folder=trash"><b>&gt; Recycle Bin</b></a></td>
+    {% else %}
+      <td><a href="/menu?folder=trash">Recycle Bin</a></td>
+    {% endifequal %}
+      <td>{{summary.trash_count}}</td>
+    </tr>
+  </tbody>
+  </table>
+  <div id="tblstyle" align="right">Quota: {{summary.all}}/{{login.quota}}</div>
+  <form id="boxnumbers" name="boxnumbers" action="">
+  <input type="hidden" id="nrmsgs" name="nrmsgs" value="{{summary.all}}" />
+  <input type="hidden" id="quota" name="quota" value="{{login.quota}}" />
+  </form>
+  <br />
+  <div id="flashmessage" style="display:none;">
+  <table width="100%" border="1" cellpadding="2" cellspacing="2" style="background-color:#fdfdf1">
+  <tr>
+  <td><div style="font-weight: bold;" id="flashmessagespace"></div></td>
+  </tr>
+  <tr>
+  <td style="text-align:right;"><a href="javascript:hide_flashmessage()">Ok</a></td>
+  </tr>
+  </table>
+  </div>
+  
+</div>
