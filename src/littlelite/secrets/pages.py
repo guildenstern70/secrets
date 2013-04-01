@@ -642,9 +642,9 @@ class AddressEdit(webapp2.RequestHandler):
         logging.debug('Field = '+ field)
         logging.debug('Value = '+ value)
         if (field == 'name'):
-            UserQueries.update_address(idaddress, None, value)
+            UserQueries.update_address(self.login, idaddress, None, value)
         elif (field == 'email'):
-            UserQueries.update_address(idaddress, value, None)
+            UserQueries.update_address(self.login, idaddress, value, None)
         self.response.out.write(value);   
              
 class Addresses(webapp2.RequestHandler):
@@ -690,13 +690,13 @@ class Addresses(webapp2.RequestHandler):
             form_name =  self.request.get('namex')
             form_address = self.request.get('emailaddr')
             logging.debug('Creating entry for %s (%s)' % (form_name, form_address))
-            UserQueries.add_address(self.login.google_user, form_address, form_name)
+            UserQueries.add_address(self.login, form_address, form_name)
         elif (mode == 'delete'):
             logging.debug('Deleting address(es)')
             checked_items = self.request.get_all('chkid')
             for item in checked_items:
                 logging.debug('Deleting ' + item)
-                UserQueries.delete_address(item)
+                UserQueries.delete_address(self.login, item)
         self.redirect("/addressbook")
     
 class Index(webapp2.RequestHandler):
@@ -704,7 +704,7 @@ class Index(webapp2.RequestHandler):
     
     def get(self):
         login = Login()
-        logging.debug("Login: " + str(login))
+        logging.info("Login: " + str(login))
         
         action = self.request.get('action')
                     

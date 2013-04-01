@@ -76,24 +76,31 @@ class UserQueries(object):
     @staticmethod
     def add_address(login, email_address, name=None):
         """ add address to addressbook """
-        dbaddress = AddressBook(user=login, address=email_address)
+        usermodel = login.user
+        dbaddress = AddressBook(parent=usermodel, user=login.google_user, address=email_address)
         logging.debug('Adding address: '+email_address)
         if (name):
             dbaddress.name = name
         dbaddress.put()
         
     @staticmethod
-    def delete_address(addrkey):
+    def delete_address(login, addrkey):
         """ delete an address from addressbook """
         address_key = db.Key(addrkey)
-        address = db.GqlQuery("SELECT * FROM AddressBook WHERE __key__=:1", address_key)
+        address = db.GqlQuery("SELECT * "
+                              "FROM AddressBook "
+                              "WHERE ANCESTOR IS :1 "
+                              "AND __key__=:2", login.user, address_key)
         address.get().delete()
     
     @staticmethod
-    def update_address(addrkey, ajax_mail=None, ajax_contact=None):
+    def update_address(login, addrkey, ajax_mail=None, ajax_contact=None):
         """ update an address """
         address_key = db.Key(addrkey)
-        address = db.GqlQuery("SELECT * FROM AddressBook WHERE __key__=:1", address_key)
+        address = db.GqlQuery("SELECT * "
+                              "FROM AddressBook "
+                              "WHERE ANCESTOR IS :1 "
+                              "AND __key__=:2", login.user, address_key)
         dbaddress = address.get()
         if (ajax_mail):
             dbaddress.address = ajax_mail
@@ -134,13 +141,19 @@ class UserQueries(object):
             
     @staticmethod
     def addresses(login):
-        """ get addresses in address book """
-        addresses = AddressBook.all()
-        addresses.filter('user', login.google_user)
+        """ get addresses in address book """       
+        addresses = db.GqlQuery("SELECT * "
+                            "FROM AddressBook "
+                            "WHERE ANCESTOR IS :1 "
+                            "ORDER BY address",
+                            login.user)
+        logging.debug('Getting addresses for ' + str(login.google_user))
+        #addresses.filter('user', login.google_user)
         if (addresses.count() < 1):
+            logging.debug('No addresses found for ' + login.username)
             addresses = None
         else:
-            addresses = addresses.order('address')
+            logging.debug('Found '+ str(addresses.count()) + ' addresses for ' + login.username)
         return addresses
          
     @staticmethod

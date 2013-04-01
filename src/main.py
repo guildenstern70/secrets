@@ -7,6 +7,7 @@
 """
 
 import webapp2
+import logging
 
 # Select Django v.0.96
 from google.appengine.dist import use_library
@@ -46,4 +47,12 @@ SECRETS = webapp2.WSGIApplication(
                                      ],
                                     debug=True)
 
+def main():
+    """ Secret's entry point """
+    logging.getLogger().setLevel(logging.DEBUG)
+    logging.info('Welcome to Secrets.')
 
+if __name__ == "__main__":
+    main()
+    
+    

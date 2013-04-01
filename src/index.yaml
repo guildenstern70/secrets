@@ -20,6 +20,11 @@ indexes:
   - name: user
   - name: address
 
+- kind: AddressBook
+  ancestor: yes
+  properties:
+  - name: address
+
 - kind: Message
   properties:
   - name: folder
