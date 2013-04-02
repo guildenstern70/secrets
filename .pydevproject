@@ -8,8 +8,8 @@
 <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
 <path>C:\Program Files (x86)\Google\google_appengine</path>
 <path>C:\Program Files (x86)\Google\google_appengine\lib\yaml\lib</path>
-<path>C:\Program Files (x86)\Google\google_appengine\lib\django-0.96</path>
 <path>C:\Program Files (x86)\Google\google_appengine\lib\webob_0_9</path>
 <path>C:\Program Files (x86)\Google\google_appengine\lib\webapp2-2.5.2</path>
+<path>C:\Program Files (x86)\Google\google_appengine\lib\django-1.2</path>
 </pydev_pathproperty>
 </pydev_project>

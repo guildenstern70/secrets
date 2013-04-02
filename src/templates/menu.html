@@ -67,8 +67,8 @@
     </tr>
     </thead>
     <tbody class="hvr">
-    {% if messages %}
-    	{% for box_message in messages %}
+    {% if messages.object_list %}
+    	{% for box_message in messages.object_list %}
         {% if box_message.received %}
     	<tr>
         {% else %}

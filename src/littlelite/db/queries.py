@@ -76,8 +76,9 @@ class UserQueries(object):
     @staticmethod
     def add_address(login, email_address, name=None):
         """ add address to addressbook """
-        usermodel = login.user
-        dbaddress = AddressBook(parent=usermodel, user=login.google_user, address=email_address)
+        dbuser = login.user
+        googleuser = login.google_user
+        dbaddress = AddressBook(parent=dbuser, user=googleuser, address=email_address)
         logging.debug('Adding address: '+email_address)
         if (name):
             dbaddress.name = name
@@ -141,14 +142,11 @@ class UserQueries(object):
             
     @staticmethod
     def addresses(login):
-        """ get addresses in address book """       
-        addresses = db.GqlQuery("SELECT * "
-                            "FROM AddressBook "
-                            "WHERE ANCESTOR IS :1 "
-                            "ORDER BY address",
-                            login.user)
+        """ get addresses in address book """  
+        addresses = AddressBook.all()
+        addresses.ancestor(login.user)   
+        addresses.order('address')
         logging.debug('Getting addresses for ' + str(login.google_user))
-        #addresses.filter('user', login.google_user)
         if (addresses.count() < 1):
             logging.debug('No addresses found for ' + login.username)
             addresses = None

@@ -20,7 +20,7 @@ from google.appengine.api import urlfetch
 
 # Django Imports
 from django.utils import simplejson
-from django.core.paginator import ObjectPaginator
+from django.core.paginator import Paginator
 
 # LittleLite Imports
 from littlelite.secrets.utils import Login, Folders
@@ -35,8 +35,8 @@ from littlelite.db.queries import UserQueries
 # Global variables
 IMAGE = 0
 VERSION_MAJOR = 0
-VERSION_MINOR = 9
-VERSION_BUILD = 2245
+VERSION_MINOR = 11
+VERSION_BUILD = 7020
 
 def version():
     """ Secrets version """
@@ -200,18 +200,20 @@ class Menu(webapp2.RequestHandler):
         if (not folder):
             folder = 'inbox'
         page_str = self.request.get('page')
-        page = 0
+        page = 1
         if (page_str):
-            page = int(page_str)
+            page = int(page_str) + 1
         logging.debug("Requesting menu page "+str(page))
         
         messages = UserQueries.messages(self.login, folder)
-        paginator = ObjectPaginator(messages, 10)
+        paginator = Paginator(messages, 10)
         if (messages):
             msgcount = messages.count()
             logging.debug("There are " + str(msgcount) + " messages in " + folder + " folder.")
             if (msgcount < 1):
                 messages = None
+                
+        paginator_page = paginator.page(page)
             
         template_values = {
             'login': self.login,
@@ -219,11 +221,11 @@ class Menu(webapp2.RequestHandler):
             'folder' : folder,
             'paginator': paginator,
             'page': page,
-            'total_pages': paginator.pages,
-            'messages' : paginator.get_page(page),
-            'has_previous' : paginator.has_previous_page(page),
-            'has_next' : paginator.has_next_page(page),     
-            'has_pages' : (paginator.pages > 1),
+            'total_pages': paginator.num_pages,
+            'messages' : paginator_page,
+            'has_previous' : paginator_page.has_previous,
+            'has_next' : paginator_page.has_next,     
+            'has_pages' : (paginator.num_pages > 1),
             'previous' : page-1,
             'next' : page+1,
             'version': version()
@@ -540,11 +542,11 @@ class Compose(webapp2.RequestHandler):
         addresses = UserQueries.addresses(self.login)
         if (addresses):
             if not (addresses.filter('address =', email_address).get()):
-                UserQueries.add_address(self.login.google_user, email_address, None)
+                UserQueries.add_address(self.login, email_address, None)
             else:
                 logging.debug('Address '+email_address+' is already in the addressbook')
         else:
-            UserQueries.add_address(self.login.google_user, email_address, None)
+            UserQueries.add_address(self.login, email_address, None)
             
     def __encrypt(self, encryption_method):
         """ Encrypt message """
