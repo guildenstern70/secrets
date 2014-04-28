@@ -122,7 +122,10 @@ class UserQueries(object):
         if (user):
             messages = user.own_messages  # All messages of given user
         else:
-            logging.debug('User '+ login.google_user.email +' not found.')
+            whereuser = str(users.get_current_user())
+            logging.debug('Getting messages for user  = '+ whereuser)
+            messages = Message.all().filter("user = ", whereuser)
+        logging.debug('Found '+ str(messages.count()) + ' messages')
         return messages
         
     @staticmethod
@@ -157,8 +160,7 @@ class UserQueries(object):
     @staticmethod
     def folder_messages_count(user, folder):
         """ get the number of messages in one folder """
-        #user = login.user
-        mex_count = -1
+        mex_count = 0
         if (user):
             messages = user.own_messages  # All messages of given user
             messages.filter('folder', folder) # User messages in given folder
@@ -168,7 +170,7 @@ class UserQueries(object):
     @staticmethod   
     def messages(login, folder):
         """ get the messages in a particular folder 
-            login = utils.Login object
+            login = login.Login object
         """
         user = login.user
         mex = None
@@ -176,6 +178,10 @@ class UserQueries(object):
             messages = user.own_messages  # All messages of given user
             messages.filter('folder', folder) # User messages in given folder
             mex = messages.order('-datetime')
+        else:
+            # This is the case when the datastore is not consistent
+            logging.debug('Warning: datastore not CONSISTENT')
+            mex = UserQueries.user_messages(login)
         return mex
             
     @staticmethod
@@ -208,6 +214,14 @@ class UserQueries(object):
         for msg in pending_messages:
             logging.debug('Moving message '+ msg.title +' in '+ secretsuser.username +' inbox')
             msg.send_copy_to(secretsuser)
+            
+    @staticmethod
+    def get_dbuser(user):
+        logging.debug(' > Getting db user '+str(user))
+        registered = db.GqlQuery("SELECT * FROM SecretsUser WHERE user = :1", user)
+        dbuser = registered.get() 
+        logging.debug(' > Found db user = '+str(dbuser))
+        return dbuser
             
     @staticmethod
     def get_registered_user(user_email):

@@ -23,7 +23,8 @@ from django.utils import simplejson
 from django.core.paginator import Paginator
 
 # LittleLite Imports
-from littlelite.secrets.utils import Login, Folders
+from littlelite.secrets.utils import Folders
+from littlelite.secrets.login import Login
 from littlelite.crypto.cryptwrapper import CryptoWrapper
 from littlelite.crypto.cryptotype import CryptoType
 from littlelite.secrets.utils import Mailer
@@ -205,13 +206,12 @@ class Menu(webapp2.RequestHandler):
             page = int(page_str) + 1
         logging.debug("Requesting menu page "+str(page))
         
-        messages = UserQueries.messages(self.login, folder)
-        paginator = Paginator(messages, 10)
-        if (messages):
-            msgcount = messages.count()
-            logging.debug("There are " + str(msgcount) + " messages in " + folder + " folder.")
-            if (msgcount < 1):
-                messages = None
+        messages = UserQueries.messages(self.login, folder)                     
+        paginator = Paginator(messages, 10)      
+        msgcount = messages.count()
+        logging.debug("There are " + str(msgcount) + " messages in " + folder + " folder.")
+        if (msgcount < 1):
+            messages = None
                 
         paginator_page = paginator.page(page)
             
@@ -609,23 +609,28 @@ class Register(webapp2.RequestHandler):
         self.response.out.write(template.render('templates/register.html', template_values))
         
     def post(self):
-        # Save registration data
+        
+        # Get parameters
         name_of_user = self.request.get('firstname')
         lastname_of_user = self.request.get('lastname')
-        birth_year = self.request.get('birth')    
+        birth_year = self.request.get('birth')  
+        agreement = self.request.get('agree')
+        
+        # Save registration data
         registration_data = SecretsUser(username=name_of_user, user=users.get_current_user())
         registration_data.firstname = name_of_user
         registration_data.lastname = lastname_of_user
-        registration_data.yearbirth = int(birth_year)
-        agreement = self.request.get('agree')
+        registration_data.yearbirth = int(birth_year)       
         if (agreement == 'on'):
             registration_data.receivenews = True
         else:
             registration_data.receivenews = False
         registration_data.put()
+        
         # Move existing messages in user's inbox
         if (self.login.user != None):
             UserQueries.initialize_user(self.login.user)
+        # Log in
         msg = urllib.quote_plus("HINT:   Click 'Compose' to send an encrypted message.")
         self.redirect("/menu?folder=inbox&msg="+msg)
                 

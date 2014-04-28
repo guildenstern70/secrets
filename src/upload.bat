@@ -1,1 +1,1 @@
-"C:\Program Files\Google\google_appengine\appcfg.py" update .
+C:\Python27\python.exe "C:\Program Files (x86)\Google\google_appengine\appcfg.py" --oauth2 update .

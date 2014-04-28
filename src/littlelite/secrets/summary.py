@@ -6,7 +6,6 @@
 
 """
 
-from google.appengine.ext import db
 from littlelite.db.queries import UserQueries
 from littlelite.secrets.utils import Folders
 
