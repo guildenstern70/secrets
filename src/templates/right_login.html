@@ -7,7 +7,9 @@
     <input type="hidden" name="command" value="logout" />&nbsp;<input type="submit" value="Logout" />
 {% else %}
     <input type="hidden" name="command" value="login" />
-    <a href="javascript:document.formLogin.submit();">Register</a>&nbsp;&nbsp;<input type="submit" value="Login" />
+    <a href="javascript:document.formLogin.submit();">
+        <img style="margin-right:-10px" src="images/sign-in-with-google.png" alt="Sign in with Google" width="180px"/>
+    </a>
 {% endif %}
  
     </form>

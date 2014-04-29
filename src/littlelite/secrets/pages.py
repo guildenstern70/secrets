@@ -36,8 +36,8 @@ from littlelite.db.queries import UserQueries
 # Global variables
 IMAGE = 0
 VERSION_MAJOR = 0
-VERSION_MINOR = 11
-VERSION_BUILD = 7020
+VERSION_MINOR = 14
+VERSION_BUILD = 1024
 
 def version():
     """ Secrets version """
@@ -113,8 +113,8 @@ class Admin(webapp2.RequestHandler):
             self.user = usrobj
             self.summary = summaryobj   
         
-    def __init__(self):
-        super(Admin, self).__init__()
+    def __init__(self, request, response):
+        self.initialize(request, response)
         self.login = Login()
         
     def __secret_users(self, users, lastitem):
